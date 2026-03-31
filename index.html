@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AmmaNanna AI - A Safe Place to Talk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+</head>
+<body class="bg-gray-900">
+    <div id="root"></div>
+    
+    <script>
+        const e = React.createElement;
+        const { useState } = React;
+
+        function App() {
+            const [messages, setMessages] = useState([
+                { id: 1, text: "Hello! I'm AmmaNanna, your AI companion. 💜", sender: "ai" }
+            ]);
+            const [input, setInput] = useState("");
+
+            const handleSend = () => {
+                if (!input.trim()) return;
+                setMessages(prev => [...prev, { id: Date.now(), text: input, sender: "user" }]);
+                setInput("");
+                setTimeout(() => {
+                    setMessages(prev => [...prev, { id: Date.now() + 1, text: "I'm here to listen and support you.", sender: "ai" }]);
+                }, 800);
+            };
+
+            return e("div", { className: "flex flex-col h-screen bg-gradient-to-b from-gray-900 to-black text-white" },
+                e("div", { className: "bg-gradient-to-r from-blue-600 to-purple-600 p-4" },
+                    e("h1", { className: "text-3xl font-bold" }, "💜 AmmaNanna AI")
+                ),
+                e("div", { className: "flex-1 overflow-y-auto p-6 space-y-4" },
+                    messages.map(msg =>
+                        e("div", { key: msg.id, className: `flex ${msg.sender === "user" ? "justify-end" : "justify-start"}` },
+                            e("div", { className: `max-w-xs px-4 py-3 rounded-lg ${msg.sender === "user" ? "bg-blue-600" : "bg-gray-700"}` }, msg.text)
+                        )
+                    )
+                ),
+                e("div", { className: "border-t border-gray-700 bg-gray-800 p-4" },
+                    e("div", { className: "flex gap-2" },
+                        e("input", { type: "text", value: input, onChange: (ev) => setInput(ev.target.value), onKeyPress: (ev) => ev.key === "Enter" && handleSend(), placeholder: "Type here...", className: "flex-1 bg-gray-700 text-white px-4 py-2 rounded" }),
+                        e("button", { onClick: handleSend, className: "bg-blue-600 px-6 py-2 rounded font-bold" }, "Send")
+                    )
+                )
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+    </script>
+</body>
+</html>
